@@ -1,0 +1,13 @@
+server.port: 4000
+
+spring:
+  application:
+    name: sendix-api
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sendixdb
+    username: postgres
+    password: postgres
