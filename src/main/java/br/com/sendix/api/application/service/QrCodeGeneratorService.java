@@ -1,6 +1,6 @@
 // src/main/java/br/com/sendix/api/domain/service/QrCodeGeneratorService.java
 
-package br.com.sendix.api.domain.service;
+package br.com.sendix.api.application.service;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;

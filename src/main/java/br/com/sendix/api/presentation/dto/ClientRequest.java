@@ -1,10 +1,10 @@
-package br.com.sendix.api.api.model;
+package br.com.sendix.api.presentation.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class ClientDto {
+public class ClientRequest {
     @NotBlank
     private String externalId;
 }

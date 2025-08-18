@@ -1,4 +1,4 @@
-package br.com.sendix.api.api.model;
+package br.com.sendix.api.presentation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ClientOtpDto {
+public class ClientOtpResponse {
     private UUID clientId;
     private String externalId;
-    private OtpDto otpDto;
+    private OtpResponse otpResponse;
 }

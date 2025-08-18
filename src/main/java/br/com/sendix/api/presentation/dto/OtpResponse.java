@@ -1,11 +1,11 @@
-package br.com.sendix.api.api.model;
+package br.com.sendix.api.presentation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class OtpDto {
+public class OtpResponse {
     private String qrCode;
     private String code;
 }

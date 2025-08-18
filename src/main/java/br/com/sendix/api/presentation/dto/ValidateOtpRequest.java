@@ -1,4 +1,4 @@
-package br.com.sendix.api.api.model;
+package br.com.sendix.api.presentation.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-public class ValidateOtpDto {
+public class ValidateOtpRequest {
     private UUID clientId;
     @NotBlank
     private String code;

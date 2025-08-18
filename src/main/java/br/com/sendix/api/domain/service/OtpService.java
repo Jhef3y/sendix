@@ -1,10 +1,11 @@
-// src/main/java/br/com/sendix/api/domain/service/OtpService.java
-
 package br.com.sendix.api.domain.service;
 
-import br.com.sendix.api.api.model.*;
+import br.com.sendix.api.application.service.QrCodeGeneratorService;
+import br.com.sendix.api.domain.model.App;
 import br.com.sendix.api.domain.model.Client;
+import br.com.sendix.api.domain.repository.AppRepository;
 import br.com.sendix.api.domain.repository.ClientRepository;
+import br.com.sendix.api.presentation.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,32 +21,36 @@ public class OtpService {
 
     private final ClientRepository clientRepository;
     private final QrCodeGeneratorService qrCodeGeneratorService;
+    private final AppRepository appRepository;
 
-    public ClientOtpDto create(ClientDto clientDto) {
-        Client client = Client.newClient(clientDto.getExternalId());
+    public ClientOtpResponse create(ClientRequest clientRequest, UUID appId) {
+        Client client = Client.newClient(clientRequest.getExternalId());
 
-        String otpUri = String.format("otpauth://totp/Sendix?secret=%s&issuer=Sendix",
-                client.getSecretKey());
+        App app = appRepository.findById(appId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "App not found"));
+
+        String otpUri = String.format("otpauth://totp/%s?secret=%s",
+                app.getName(), client.getSecretKey());
 
         String qrCodeBase64 = qrCodeGeneratorService.generateQrCodeBase64(otpUri);
 
-        OtpDto otpDto = new OtpDto(qrCodeBase64, client.getSecretKey());
+        OtpResponse otpResponse = new OtpResponse(qrCodeBase64, client.getSecretKey());
 
         clientRepository.saveAndFlush(client);
 
-        return new ClientOtpDto(client.getId(), client.getExternalId(), otpDto);
+        return new ClientOtpResponse(client.getId(), client.getExternalId(), otpResponse);
     }
 
-    public ValidateOtpResponseDto validate(@Valid ValidateOtpDto input) {
+    public ValidateOtpResponse validate(@Valid ValidateOtpRequest input) {
         Client client = clientRepository.findById(input.getClientId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         boolean isValid = client.isValidCode(input.getCode());
 
         if (isValid) {
-            return new ValidateOtpResponseDto(true, OffsetDateTime.now());
+            return new ValidateOtpResponse(true, OffsetDateTime.now());
         } else {
-            return new ValidateOtpResponseDto(false, OffsetDateTime.now());
+            return new ValidateOtpResponse(false, OffsetDateTime.now());
         }
     }
 }

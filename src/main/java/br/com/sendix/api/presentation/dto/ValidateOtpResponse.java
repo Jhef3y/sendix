@@ -1,4 +1,4 @@
-package br.com.sendix.api.api.model;
+package br.com.sendix.api.presentation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 
 @Getter
 @AllArgsConstructor
-public class ValidateOtpResponseDto {
+public class ValidateOtpResponse {
     private boolean valid;
     private OffsetDateTime validatedIn;
 }
